@@ -58,7 +58,7 @@ class ThreadsApi
         return $this->sendRequest('GET', sprintf('%s/%s/%s', $this->getApiBaseUrl(), $versionCode, $endpoint), $options);
     }
 
-    public function post(string $endpoint, array $params, ?string $versionCode = null): ThreadsResponse
+    public function post(string $endpoint, array $params = [], ?string $versionCode = null): ThreadsResponse
     {
         $versionCode = $versionCode ?? $this->versionCode;
         $options = [
