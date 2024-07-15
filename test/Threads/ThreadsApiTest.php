@@ -42,8 +42,9 @@ class ThreadsApiTest extends TestCase
 
     public function testGetCredentials()
     {
-        $credentials = $this->threadsApi->getCredentials();
-        $this->assertSame(['client_id' => $this->clientId, 'client_secret' => $this->clientSecret], $credentials);
+        $credentials = $this->threadsApi->getAppCredentials();
+        $this->assertSame($this->clientId, $credentials->clientId);
+        $this->assertSame($this->clientSecret, $credentials->clientSecret);
     }
 
     public function testGetRequest()

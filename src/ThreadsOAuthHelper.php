@@ -8,9 +8,9 @@ class ThreadsOAuthHelper
 
     public function getLoginUrl(array $scopes, string $redirectUri, ?string $state = null): string
     {
-        $credentials = $this->threadsApi->getCredentials();
+        $credentials = $this->threadsApi->getAppCredentials();
         $options = [
-            'client_id' => $credentials['client_id'],
+            'client_id' => $credentials->clientId,
             'redirect_uri' => $redirectUri,
             'scope' => implode(',', $scopes),
             'response_type' => 'code',
@@ -24,15 +24,15 @@ class ThreadsOAuthHelper
 
     public function getShortLivedAccessToken(string $code, string $redirectUri): ThreadsResponse
     {
-        $credentials = $this->threadsApi->getCredentials();
+        $credentials = $this->threadsApi->getAppCredentials();
         $url = sprintf('%s/oauth/access_token', $this->getApiBaseUrl());
         $options = [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                'client_id' => $credentials['client_id'],
-                'client_secret' => $credentials['client_secret'],
+                'client_id' => $credentials->clientId,
+                'client_secret' => $credentials->clientSecret,
                 'code' => $code,
                 'grant_type' => 'authorization_code',
                 'redirect_uri' => $redirectUri,
@@ -44,11 +44,11 @@ class ThreadsOAuthHelper
 
     public function getLongLivedAccessToken(string $accessToken): ThreadsResponse
     {
-        $credentials = $this->threadsApi->getCredentials();
+        $credentials = $this->threadsApi->getAppCredentials();
         $url = sprintf('%s/access_token', $this->getApiBaseUrl());
         $options = [
             'query' => [
-                'client_secret' => $credentials['client_secret'],
+                'client_secret' => $credentials->clientSecret,
                 'access_token' => $accessToken,
                 'grant_type' => 'th_exchange_token',
             ],
@@ -59,11 +59,11 @@ class ThreadsOAuthHelper
 
     public function refreshLongLivedAccessToken(string $accessToken): ThreadsResponse
     {
-        $credentials = $this->threadsApi->getCredentials();
+        $credentials = $this->threadsApi->getAppCredentials();
         $url = sprintf('%s/refresh_access_token', $this->getApiBaseUrl());
         $options = [
             'query' => [
-                'client_secret' => $credentials['client_secret'],
+                'client_secret' => $credentials->clientSecret,
                 'access_token' => $accessToken,
                 'grant_type' => 'th_refresh_token',
             ],

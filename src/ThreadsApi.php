@@ -15,11 +15,14 @@ class ThreadsApi
 
     private ?string $accessToken = null;
 
+    private ThreadsAppCredentials $appCredentials;
+
     public function __construct(
-        protected string $clientId,
-        protected string $clientSecret,
+        string $clientId,
+        string $clientSecret,
         array|ClientInterface $clientOrConfig = [],
     ) {
+        $this->appCredentials = new ThreadsAppCredentials($clientId, $clientSecret);
         if ($clientOrConfig instanceof ClientInterface) {
             $this->client = $clientOrConfig;
         } else {
@@ -37,9 +40,9 @@ class ThreadsApi
         $this->accessToken = $accessToken;
     }
 
-    public function getCredentials(): array
+    public function getAppCredentials(): ThreadsAppCredentials
     {
-        return ['client_id' => $this->clientId, 'client_secret' => $this->clientSecret];
+        return $this->appCredentials;
     }
 
     public function get(string $endpoint, array $params = [], ?string $versionCode = null): ThreadsResponse
