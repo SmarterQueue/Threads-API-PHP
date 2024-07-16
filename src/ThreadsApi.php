@@ -9,7 +9,7 @@ use GuzzleHttp\RequestOptions;
 
 class ThreadsApi
 {
-    protected string $versionCode = 'v1.0';
+    private string $versionCode = 'v1.0';
 
     private ClientInterface $client;
 
@@ -47,7 +47,6 @@ class ThreadsApi
 
     public function get(string $endpoint, array $params = [], ?string $versionCode = null): ThreadsResponse
     {
-        $versionCode = $versionCode ?? $this->versionCode;
         $options = [
             'query' => [
                 'access_token' => $this->accessToken,
@@ -55,12 +54,11 @@ class ThreadsApi
         ];
         $options['query'] = array_merge($options['query'], $params);
 
-        return $this->sendRequest('GET', sprintf('%s/%s/%s', $this->getApiBaseUrl(), $versionCode, $endpoint), $options);
+        return $this->sendRequest('GET', $endpoint, $options, $versionCode);
     }
 
     public function post(string $endpoint, array $params = [], ?string $versionCode = null): ThreadsResponse
     {
-        $versionCode = $versionCode ?? $this->versionCode;
         $options = [
             'json' => [
                 'access_token' => $this->accessToken,
@@ -68,11 +66,17 @@ class ThreadsApi
         ];
         $options['json'] = array_merge($options['json'], $params);
 
-        return $this->sendRequest('POST', sprintf('%s/%s/%s', $this->getApiBaseUrl(), $versionCode, $endpoint), $options);
+        return $this->sendRequest('POST', $endpoint, $options, $versionCode);
     }
 
-    public function sendRequest(string $method, string $uri, array $options): ThreadsResponse
+    public function sendRequest(string $method, string $endpoint, array $options, ?string $versionCode): ThreadsResponse
     {
+        $versionCode = $versionCode ?? $this->versionCode;
+        if (!empty($versionCode)) {
+            $uri = sprintf('%s/%s/%s', $this->getApiBaseUrl(), $versionCode, $endpoint);
+        } else {
+            $uri = sprintf('%s/%s', $this->getApiBaseUrl(), $endpoint);
+        }
         if ('GET' !== $method && !isset($options['headers']['Content-Type'])) {
             $options['headers']['Content-Type'] = 'application/json';
         }

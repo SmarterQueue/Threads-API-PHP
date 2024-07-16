@@ -25,55 +25,38 @@ class ThreadsOAuthHelper
     public function getShortLivedAccessToken(string $code, string $redirectUri): ThreadsResponse
     {
         $credentials = $this->threadsApi->getAppCredentials();
-        $url = sprintf('%s/oauth/access_token', $this->getApiBaseUrl());
-        $options = [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'client_id' => $credentials->clientId,
-                'client_secret' => $credentials->clientSecret,
-                'code' => $code,
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => $redirectUri,
-            ],
+        $params = [
+            'client_id' => $credentials->clientId,
+            'client_secret' => $credentials->clientSecret,
+            'code' => $code,
+            'grant_type' => 'authorization_code',
+            'redirect_uri' => $redirectUri,
         ];
 
-        return $this->threadsApi->sendRequest('POST', $url, $options);
+        return $this->threadsApi->post('oauth/access_token', $params, '');
     }
 
     public function getLongLivedAccessToken(string $accessToken): ThreadsResponse
     {
         $credentials = $this->threadsApi->getAppCredentials();
-        $url = sprintf('%s/access_token', $this->getApiBaseUrl());
-        $options = [
-            'query' => [
-                'client_secret' => $credentials->clientSecret,
-                'access_token' => $accessToken,
-                'grant_type' => 'th_exchange_token',
-            ],
+        $params = [
+            'client_secret' => $credentials->clientSecret,
+            'access_token' => $accessToken,
+            'grant_type' => 'th_exchange_token',
         ];
 
-        return $this->threadsApi->sendRequest('GET', $url, $options);
+        return $this->threadsApi->get('access_token', $params, '');
     }
 
     public function refreshLongLivedAccessToken(string $accessToken): ThreadsResponse
     {
         $credentials = $this->threadsApi->getAppCredentials();
-        $url = sprintf('%s/refresh_access_token', $this->getApiBaseUrl());
-        $options = [
-            'query' => [
-                'client_secret' => $credentials->clientSecret,
-                'access_token' => $accessToken,
-                'grant_type' => 'th_refresh_token',
-            ],
+        $params = [
+            'client_secret' => $credentials->clientSecret,
+            'access_token' => $accessToken,
+            'grant_type' => 'th_refresh_token',
         ];
 
-        return $this->threadsApi->sendRequest('GET', $url, $options);
-    }
-
-    protected function getApiBaseUrl(): string
-    {
-        return 'https://graph.threads.net';
+        return $this->threadsApi->get('refresh_access_token', $params, '');
     }
 }
