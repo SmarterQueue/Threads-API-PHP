@@ -42,7 +42,7 @@ class ThreadsOAuthHelperTest extends TestCase
         $redirectUri = 'https://example.com/redirect';
         $responseBody = ['access_token' => 'short-lived-token'];
 
-        $this->mockThreadsApi->method('sendRequest')->willReturn(new ThreadsResponse(200, [], $responseBody));
+        $this->mockThreadsApi->method('post')->willReturn(new ThreadsResponse(200, [], $responseBody));
 
         $result = $this->oAuthHelper->getShortLivedAccessToken($code, $redirectUri);
         $this->assertInstanceOf(ThreadsResponse::class, $result);
@@ -54,7 +54,7 @@ class ThreadsOAuthHelperTest extends TestCase
         $accessToken = 'short-lived-token';
         $responseBody = ['access_token' => 'long-lived-token'];
 
-        $this->mockThreadsApi->method('sendRequest')->willReturn(new ThreadsResponse(200, [], $responseBody));
+        $this->mockThreadsApi->method('get')->willReturn(new ThreadsResponse(200, [], $responseBody));
 
         $result = $this->oAuthHelper->getLongLivedAccessToken($accessToken);
         $this->assertInstanceOf(ThreadsResponse::class, $result);
@@ -66,7 +66,7 @@ class ThreadsOAuthHelperTest extends TestCase
         $accessToken = 'long-lived-token';
         $responseBody = ['access_token' => 'refreshed-long-lived-token'];
 
-        $this->mockThreadsApi->method('sendRequest')->willReturn(new ThreadsResponse(200, [], $responseBody));
+        $this->mockThreadsApi->method('get')->willReturn(new ThreadsResponse(200, [], $responseBody));
 
         $result = $this->oAuthHelper->refreshLongLivedAccessToken($accessToken);
         $this->assertInstanceOf(ThreadsResponse::class, $result);
