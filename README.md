@@ -1,5 +1,5 @@
 # Threads API Wrapper for PHP
-This provides a PHP wrapper around Meta's Threads API.
+This provides a PHP wrapper around [Meta's Threads API](https://developers.facebook.com/docs/threads/).
 
 # Usage
 There are 2 main API service classes - the `ThreadsApi` and `ThreadsOAuthHelper`
